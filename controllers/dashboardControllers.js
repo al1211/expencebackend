@@ -9,7 +9,7 @@
 exports.getDashboardData=async(req,res)=>{
   try{
     const userId=req.user.id;
-    console.log("userId",userId);
+    
     const userobjectId=new Types.ObjectId(String(userId));
 
     // fetch total income and expence 
@@ -27,9 +27,7 @@ exports.getDashboardData=async(req,res)=>{
     // Get Income transaction in the last 60 days
     const last600daysIncomeTransaction=await Income.find({
         userId,
-        date:{
-            $gte:new Date(Date.now()-60*24*60*60*1000),
-        },
+        date:{$gte:new Date(Date.now()-60*24*60*60*1000) },
     }).sort({date:-1});
 
     // Get total income transaction in the last 60 days
@@ -58,12 +56,13 @@ const lastTransaction  =[...(await Income.find({userId}).sort({date:-1}).limit(5
     ...txn.toObject(),
     type:"expence",
 })
-),].sort((a,b)=>b.date-a.date); 
+),
+].sort((a,b)=>b.date-a.date); 
 
 // final response
 
- res.json({totalBalance:(totalIncome[0]?.total || 0)-(totalExpence[0]?.total || 0),
-    totalIncome:totalIncome[0]?.total || 0,
+ res.json({totalBalance:(totalIcome[0]?.total || 0)-(totalExpence[0]?.total || 0),
+   totalIncome :totalIcome[0]?.total || 0,
     totalExpence:totalExpence[0]?.total || 0,
     last30daysExpence:{
         total:expencelast30days,
@@ -76,7 +75,7 @@ const lastTransaction  =[...(await Income.find({userId}).sort({date:-1}).limit(5
     recentTransaction:lastTransaction,
 });
 }catch(error){
-    res.status(500).json({message:"Server Error",error});
+    res.status(500).json({message:"Server Error in dashborad",error});
 }
 }
   
