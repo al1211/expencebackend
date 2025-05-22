@@ -31,7 +31,7 @@ exports.addIncome = async (req, res) => {
             date:parsedDate,
         });
         await newIncome.save();
-        res.status(201).json({newIncome})
+        res.status(200).json(newIncome)
     }catch(error){
         console.error(error);
         res.status(500).json({message:"Server Error"})
@@ -42,7 +42,7 @@ exports.addIncome = async (req, res) => {
 
 exports.getAllIncome = async (req, res) => {
     const userId=req.user.id;
-    console.log(userId);
+    
     try{
         const income=await Income.find({userId}).sort({date:-1});
         res.json({income})
@@ -54,7 +54,7 @@ exports.getAllIncome = async (req, res) => {
 // delete Income source
 
 exports.deleteIncome = async (req, res) => {
-   
+
     try{
         await Income.findByIdAndDelete(req.params.id);
         res.json({message:"Income deleted Susseccfully"})
@@ -75,7 +75,7 @@ exports.downloadIncomeExcel = async (req, res) => {
         const data=income.map((item)=>({
             Source:item.source,
             Amount:item.amount,
-            Aate:item.date,
+            Date:item.date,
         }));
         // create Excel
         const wb=xlsx.utils.book_new();

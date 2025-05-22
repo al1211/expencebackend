@@ -16,9 +16,7 @@ exports.addExpence = async (req, res) => {
     // Validate date
     const parsedDate = new Date(date);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(parsedDate.getTime())) {
-      return res
-        .status(400)
-        .json({ message: "Invalid date format. Use YYYY-MM-DD." });
+      return res.status(400).json({ message: "Invalid date format. Use YYYY-MM-DD." });
     }
 
     const newExpence = new Expence({
@@ -29,7 +27,7 @@ exports.addExpence = async (req, res) => {
       date: parsedDate,
     });
     await newExpence.save();
-    res.status(201).json({ newExpence });
+    res.status(201).json( newExpence );
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
@@ -71,7 +69,7 @@ exports.downloadExpenceExcel = async (req, res) => {
     const data = expence.map((item) => ({
       category: item.category,
       Amount: item.amount,
-      Aate: item.date,
+      Date: item.date,
     }));
     // create Excel
     const wb = xlsx.utils.book_new();
